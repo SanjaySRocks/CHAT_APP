@@ -5,17 +5,40 @@ import { Tabs, TabsList } from "@/components/ui/tabs"; // Ensure this path is co
 import { TabsContent, TabsTrigger } from "@radix-ui/react-tabs";
 import Input from "@/components/ui/Input"; // This works with default export
 import Button from "@/components/ui/Button"; // Ensure you import the Button component
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { SIGNUP_ROUTE } from "@/utils/constants";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+const validateSignup = () =>{
+  if(!email.length){
+    toast.error("Email is required");
+    return false;
+  }
+  if(!password.length){
+    toast.error("password is required");
+    return false;
+  }
+  if(password !== confirmPassword){
+    toast.error("Password and confirm password should be same");
+    return false;
+  }
+  return true;
+};
+
   const handleLogin = async () => {
     // Handle login logic here
   };
 
   const handleSignup = async () => {
+    if(validateSignup()){
+      const response = await apiClient.post(SIGNUP_ROUTE, {email,password});
+      console.log({response});
+    }
     // Handle signup logic here
   };
 
