@@ -1,6 +1,6 @@
 import axios from "axios";
-import { HOST } from "@/utils/constants"; // Make sure constants.js exists and exports HOST
+import { HOST } from "@/utils/constants"; // Ensure the path is correct
 
 export const apiClient = axios.create({
-  baseURL: HOST,
+  baseURL: HOST, // This will use the HOST defined in constants.js
 });
