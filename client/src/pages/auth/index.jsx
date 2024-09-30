@@ -7,41 +7,81 @@ import Input from "@/components/ui/Input"; // This works with default export
 import Button from "@/components/ui/Button"; // Ensure you import the Button component
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { SIGNUP_ROUTE } from "@/utils/constants";
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 const Auth = () => {
+  const Navigate = useNavigate();
+  const { setUserInfo } = useAppStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-const validateSignup = () =>{
-  if(!email.length){
-    toast.error("Email is required");
-    return false;
-  }
-  if(!password.length){
-    toast.error("password is required");
-    return false;
-  }
-  if(password !== confirmPassword){
-    toast.error("Password and confirm password should be same");
-    return false;
-  }
-  return true;
-};
+  const validateLogin = () => {
+    if (!email.length) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!password.length) {
+      toast.error("Password is required");
+      return false;
+    }
+    return true;
+  };
+
+  const validateSignup = () => {
+    if (!email.length) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!password.length) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Password and confirm password should be the same");
+      return false;
+    }
+    return true;
+  };
 
   const handleLogin = async () => {
-    // Handle login logic here
+    if (validateLogin()) {
+      try {
+        const response = await apiClient.post(LOGIN_ROUTE, { email, password }, { withCredentials: true });
+        
+        if (response.data.user.id) {
+          setUserInfo(response.data.user)
+          if (response.data.user.profileSetup) {
+            Navigate("/chat");
+          } else {
+            Navigate("/profile");
+          }
+        }
+        console.log({ response });
+      } catch (error) {
+        console.error("Login error:", error.response?.data || error.message);
+        toast.error(error.response?.data?.error || "Login failed");
+      }
+    }
   };
 
   const handleSignup = async () => {
-    if(validateSignup()){
-      const response = await apiClient.post(SIGNUP_ROUTE, {email,password},
-        { withCredentials: true }
-      );
-      console.log({response});
+    if (validateSignup()) {
+      try {
+        const response = await apiClient.post(SIGNUP_ROUTE, { email, password }, { withCredentials: true });
+        
+        if (response.status === 201) {
+          setUserInfo(response.data.user);
+          Navigate("/profile");
+        }
+        console.log({ response });
+      } catch (error) {
+        console.error("Signup error:", error.response?.data || error.message);
+        toast.error(error.response?.data?.error || "Signup failed");
+      }
     }
-    // Handle signup logic here
   };
 
   return (
@@ -57,7 +97,19 @@ const validateSignup = () =>{
           </div>
         </div>
         <div className="flex items-center justify-center w-full">
-          <Tabs className="w-3/4">
+          <Tabs
+            className="w-3/4"
+            defaultValue="login"
+            onValueChange={(value) => {
+              if (value === "login") {
+                setConfirmPassword(""); // Reset confirm password
+                setPassword(""); // Reset password
+              } else {
+                setEmail(""); // Reset email
+                setPassword(""); // Reset password
+              }
+            }}
+          >
             <TabsList className="bg-transparent rounded-none w-full">
               <TabsTrigger
                 value="login"
@@ -116,9 +168,6 @@ const validateSignup = () =>{
               <Button className="rounded-full p-6" onClick={handleSignup}>
                 Signup
               </Button>
-
-
-              
             </TabsContent>
           </Tabs>
         </div>

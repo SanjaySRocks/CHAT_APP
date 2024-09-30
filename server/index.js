@@ -8,7 +8,7 @@ import authRoutes from "./routes/AuthRoutes.js";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 const databaseURL = process.env.DATABASE_URL;
 //cors -> agr hm differnt server use kre we need to commncate btw them
 app.use(cors({
