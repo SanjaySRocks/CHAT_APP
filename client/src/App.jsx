@@ -30,7 +30,7 @@ const App = () => {
     const getUserData = async () => {
       try {
         const response = await apiClient.get(GET_USER_INFO, {
-          withCredentials: true,
+          withCredentials: true, // Ensure cookies are sent with the request
         });
 
         if (response.status === 200 && response.data.user) {

@@ -1,21 +1,18 @@
 import jwt from 'jsonwebtoken';
 
-// Middleware to verify JWT
 export const verifyToken = (request, response, next) => {
-  const token = request.cookies.jwt; 
+  const token = request.cookies.jwt || request.headers.authorization?.split(' ')[1];
 
   if (!token) {
     return response.status(403).json({ error: "No token provided" });
   }
 
-  jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return response.status(401).json({ error: "Unauthorized" });
     }
-    
-    // Store the decoded user object in the request object
-    request.user = decoded; 
 
-    next(); 
+    request.user = decoded; // Attach the decoded user object to the request
+    next();
   });
-}; 
+};
