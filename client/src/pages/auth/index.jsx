@@ -99,7 +99,7 @@ useEffect(()=>{
       }
     }
   };
-if(user){
+if(user){ 
   Navigate("/profile")
 }
   return (
