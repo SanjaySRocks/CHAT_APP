@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./pages/auth";
@@ -7,6 +8,7 @@ import { useAppStore } from "./store";
 import { apiClient } from "./lib/api-client";
 import { GET_USER_INFO } from "./utils/constants"; 
 import { Toaster, toast } from "react-hot-toast"; // Import Toaster and toast
+
 
 // Protects routes that require authentication
 const PrivateRoute = ({ children }) => {
@@ -30,7 +32,7 @@ const App = () => {
     const getUserData = async () => {
       try {
         const response = await apiClient.get(GET_USER_INFO, {
-          withCredentials: true, // Ensure cookies are sent with the request
+          withCredentials: true, headers:{ token: Cookies.get(`token`)}  // Ensure cookies are sent with the request
         });
 
         if (response.status === 200 && response.data.user) {

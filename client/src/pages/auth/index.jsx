@@ -1,15 +1,19 @@
-import { useState } from "react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import Background from "@/assets/login2.png"; // Corrected import
 import Victory from "@/assets/victory.svg";
 import { Tabs, TabsList } from "@/components/ui/tabs"; // Ensure this path is correct
+
 import { TabsContent, TabsTrigger } from "@radix-ui/react-tabs";
 import Input from "@/components/ui/Input"; // This works with default export
 import Button from "@/components/ui/Button"; // Ensure you import the Button component
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
+import Profile from "../Profile";
+
 
 const Auth = () => {
   const Navigate = useNavigate();
@@ -17,7 +21,15 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+const [user,setUser]=useState(null)
+  
+useEffect(()=>{
+  if(Cookies.get("user")){
+    const curr = JSON.parse(Cookies.get("user"))
+    setUser(curr)
+    setUserInfo(curr)
+  }
+})
   const validateLogin = () => {
     if (!email.length) {
       toast.error("Email is required");
@@ -52,6 +64,8 @@ const Auth = () => {
         const response = await apiClient.post(LOGIN_ROUTE, { email, password }, { withCredentials: true });
         
         if (response.data.user.id) {
+          Cookies.set("user", JSON.stringify(response.data.user) )
+          
           setUserInfo(response.data.user)
           if (response.data.user.profileSetup) {
             Navigate("/chat");
@@ -73,6 +87,8 @@ const Auth = () => {
         const response = await apiClient.post(SIGNUP_ROUTE, { email, password }, { withCredentials: true });
         
         if (response.status === 201) {
+
+          Cookies.set("user", JSON.stringify(response.data.user) )
           setUserInfo(response.data.user);
           Navigate("/profile");
         }
@@ -83,7 +99,9 @@ const Auth = () => {
       }
     }
   };
-
+if(user){
+  Navigate("/profile")
+}
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
       <div className="h-[80vh] bg-white border-2 border-white text-opacity-90 shadow-2xl w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">

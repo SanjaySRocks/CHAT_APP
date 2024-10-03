@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useAppStore } from "@/store";
 import { useEffect, useState, useRef } from "react";
 import { renderMatches, useNavigate } from "react-router-dom";
@@ -7,7 +8,8 @@ import { getColor } from "@/lib/utils";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { apiClient } from "@/lib/api-client";
-import { ADD_PROFILE_IMAGE_ROUTE, UPDATE_PROFILE_ROUTE } from "@/utils/constants";
+import { ADD_PROFILE_IMAGE_ROUTE, HOST, UPDATE_PROFILE_ROUTE } from "@/utils/constants";
+
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -84,8 +86,14 @@ const Profile = () => {
     if (file) {
       const formData = new FormData(); // Corrected here
       formData.append("profile-image", file);
+      console.log(Cookies.get("user"));
+      const curr = JSON.parse(Cookies.get("user"));
+      console.log(curr);
+      formData.append("user" , curr.id)
       try {
-        const response = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData, { withCredentials: true });
+        const response = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData,{ headers: {
+          'Content-Type': 'multipart/form-data',
+        },});
         if (response.status === 200 && response.data.image) {
           // setImage(response.data.image); // Store the uploaded image
           setUserInfo({ ...userInfo, image: response.data.image }); // Update user info

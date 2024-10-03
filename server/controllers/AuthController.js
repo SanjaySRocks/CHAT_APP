@@ -1,7 +1,8 @@
-import { request, response } from "express";
+
+
 import User from "../models/UserModel.js"; 
 import jwt from "jsonwebtoken";
-import { compare } from "bcrypt"; 
+import bcrypt from  "bcryptjs"; 
 import { renameSync , unlinkSync} from "fs";
 
 const maxAge = 3 * 24 * 60 * 60; 
@@ -12,8 +13,9 @@ const createToken = (email, userId) => {
 
 export const signup = async (request, response) => {
   try {
+   
     const { email, password } = request.body;
-
+    
     if (!email || !password) {
       return response.status(400).json({ error: "Email and password are required" });
     }
@@ -22,14 +24,18 @@ export const signup = async (request, response) => {
     if (existingUser) {
       return response.status(400).json({ error: "User already exists" });
     }
+    
 
-    const user = await User.create({ email, password }); // Ensure password hashing happens in the model
+    const user = await User.create({ email,password }); 
+ 
+    // Ensure password hashing happens in the model
     response.cookie("jwt", createToken(email, user.id), {
+      
       maxAge,
       secure: false, // Change to true in production
       sameSite: "Lax", // Change to "None" only if you serve from a different origin
     });
-    
+  
 
     return response.status(201).json({
       user: {
@@ -45,8 +51,11 @@ export const signup = async (request, response) => {
 };
 
 export const login = async (request, response) => {
+  
   try {
     const { email, password } = request.body;
+    console.log(`email` , email);
+  console.log(`password` , password);
 
     if (!email || !password) {
       return response.status(400).json({ error: "Email and password are required" });
@@ -57,7 +66,8 @@ export const login = async (request, response) => {
       return response.status(404).json({ error: "User with given email not found" });
     }
 
-    const auth = await compare(password, user.password);
+    const auth = await bcrypt.compare(password, user.password);
+    console.log(auth);
     if (!auth) {
       return response.status(400).json({ error: "Password is incorrect" });
     }
@@ -87,13 +97,14 @@ export const login = async (request, response) => {
 
 export const getUserInfo = async (request, response) => {
   try {
+    console.log(`1`);
     const userId = request.user.userId;
-
+console.log(`2`);
     const user = await User.findById(userId);
     if (!user) {
       return response.status(404).json({ error: "User not found" });
     }
-
+console.log(`3`);
     return response.status(200).json({
       id: user.id,
       email: user.email,
@@ -103,6 +114,7 @@ export const getUserInfo = async (request, response) => {
       image: user.image,
       color: user.color,
     });
+    console.log(`4`);
   } catch (error) {
     console.error("Get user info error:", error.message);
     return response.status(500).json({ error: "Internal server error" });
@@ -146,24 +158,34 @@ export const userProfile = async (request, response) => {
 
 
 export const addProfileImage = async (request, response) => {
+  console.log(`1`);
+  
   try {
+    console.log(request.body.user);
+    console.log(request.file);
+    
     if(!request.file){
       return response.status(400).send("File is Required");
     }
+    console.log(`2`);
     const date = Date.now();
     let fileName = "uploads/profiles/" + date + request.file.originalname ;
+    
     renameSync(request.file.path,fileName);
-     const updatedUser= await User.findByIdAndUpdate(request.userId,{image:fileName},{new:true, runValidators: true})
-
+    
+     const updatedUser= await User.findByIdAndUpdate(request.body.user,{image:fileName})
+console.log(updatedUser);
     return response.status(200).json({
+      
      image: updatedUser.image,
     });
+    console.log(`3`);
   } catch (error) {
     console.error("User profile update error:", error.message);
     return response.status(500).json({ error: "Internal server error" });
   }
 };
-
+console.log(`4`);
 export const removeProfileImage = async (request, response) => {
   try {
     const { userId } = request;
