@@ -4,7 +4,7 @@ export const verifyToken = (request, response, next) => {
 console.log(`2`);
 console.log(`cookies`,request.cookies);
 console.log(`token`,request.headers);  
-const token = request.cookies.jwt || request.headers.token;
+const token = request.cookies.jwt || request.headers.cookie;
   
 console.log(token);
   if (!token) {

@@ -50,13 +50,21 @@ const Profile = () => {
   const saveChanges = async () => {
     if (validateProfile()) {
       try {
+        const token=Cookies.get("jwt");
+        console.log("token" , token);
         const response = await apiClient.post(
+          
           UPDATE_PROFILE_ROUTE,
           { firstName, lastName, color: selectedColor },
-          { withCredentials: true }
+          {headers: {
+            'token':Cookies.get("jwt"), 
+            "Content-Type":"application/json"
+          }, withCredentials: true }
         );
-        if (response.status === 200 && response.data) {
-          setUserInfo({ ...response.data });
+        console.log(response);
+        if (response.status == 200 && response.data) {
+          console.log("recieved");
+          setUserInfo({ ...response.data , profileSetup:true });
           toast.success("Profile Updated Successfully");
           navigate("/chat");
         }

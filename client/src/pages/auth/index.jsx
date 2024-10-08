@@ -23,13 +23,13 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 const [user,setUser]=useState(null)
   
-useEffect(()=>{
-  if(Cookies.get("user")){
-    const curr = JSON.parse(Cookies.get("user"))
-    setUser(curr)
-    setUserInfo(curr)
-  }
-})
+// useEffect(()=>{
+//   if(Cookies.get("user")){
+//     const curr = JSON.parse(Cookies.get("user"))
+//     setUser(curr)
+//     setUserInfo(curr)
+//   }
+// })
   const validateLogin = () => {
     if (!email.length) {
       toast.error("Email is required");
@@ -67,6 +67,7 @@ useEffect(()=>{
           Cookies.set("user", JSON.stringify(response.data.user) )
           
           setUserInfo(response.data.user)
+          Cookies.set("jwt", response.data.user.token)
           if (response.data.user.profileSetup) {
             Navigate("/chat");
           } else {
@@ -90,6 +91,7 @@ useEffect(()=>{
 
           Cookies.set("user", JSON.stringify(response.data.user) )
           setUserInfo(response.data.user);
+          Cookies.set("jwt", response.data.user.token)
           Navigate("/profile");
         }
         console.log({ response });
@@ -99,9 +101,7 @@ useEffect(()=>{
       }
     }
   };
-if(user){ 
-  Navigate("/profile")
-}
+
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
       <div className="h-[80vh] bg-white border-2 border-white text-opacity-90 shadow-2xl w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">

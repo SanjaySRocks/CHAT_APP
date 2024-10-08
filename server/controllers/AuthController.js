@@ -26,21 +26,17 @@ export const signup = async (request, response) => {
     }
     
 
-    const user = await User.create({ email,password }); 
- 
+    const user = await User.create({ email,password, firstName:"" , lastName:"" }); 
+ const token=createToken(email, user.id);
     // Ensure password hashing happens in the model
-    response.cookie("jwt", createToken(email, user.id), {
-      
-      maxAge,
-      secure: false, // Change to true in production
-      sameSite: "Lax", // Change to "None" only if you serve from a different origin
-    });
+    
   
 
     return response.status(201).json({
       user: {
         id: user.id,
         email: user.email,
+        token:token,
         profileSetup: user.profileSetup,
       },
     });
@@ -71,18 +67,15 @@ export const login = async (request, response) => {
     if (!auth) {
       return response.status(400).json({ error: "Password is incorrect" });
     }
-
-    response.cookie("jwt", createToken(email, user.id), {
-      maxAge,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
-    });
+const token = createToken(email, user.id)
+   
 
     return response.status(200).json({
       user: {
         id: user.id,
         email: user.email,
         profileSetup: user.profileSetup,
+        token:token,
         firstName: user.firstName,
         lastName: user.lastName,
         image: user.image,
@@ -126,14 +119,19 @@ export const userProfile = async (request, response) => {
     const userId = request.user.userId; 
     const { firstName, lastName, color } = request.body;
 
+    console.log("Update Profile Request Data:", request.body);
+
+
     if (!firstName || !lastName ) {
       return response.status(400).json({ error: "First name, last name, and color are required" });
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       request.user.userId, // Make sure you're using request.user.userId instead of request.userId
-      { image: __filename },
-      { new: true, runValidators: true }
+     { firstName  : firstName , lastName : lastName
+     }
+     
+     
     );
    
 
@@ -158,7 +156,7 @@ export const userProfile = async (request, response) => {
 
 
 export const addProfileImage = async (request, response) => {
-  console.log(`1`);
+  console.log("Starting profile image upload");
   
   try {
     console.log(request.body.user);
