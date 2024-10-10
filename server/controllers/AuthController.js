@@ -1,4 +1,4 @@
-
+ 
 
 import User from "../models/UserModel.js"; 
 import jwt from "jsonwebtoken";
@@ -203,3 +203,12 @@ export const removeProfileImage = async (request, response) => {
     return response.status(500).send("internal server err");
   }
   };
+  export const logout = async (request, response) => {
+    try {
+      response.cookie("jwt" , "" , {maxAge: 1 , secure:true , sameSite:"None"})
+      return response.status(200).send("Logout successfully");
+    }catch(error){
+      console.log({error});
+      return response.status(500).send("internal server err");
+    }
+    };
