@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes.js";
 import { addProfileImage } from "./controllers/AuthController.js";
 import multer from "multer";
+import contactsRoutes from "./routes/ContactRoutes.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cookieParser()); // Getting cookie from frontend
 app.use(express.json()); // Parses incoming requests with JSON payloads
  // Route for authentication
 app.use("/api/auth", authRoutes); 
+app.use("/api/contacts" , contactsRoutes);
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`); // Logs server running message
 });

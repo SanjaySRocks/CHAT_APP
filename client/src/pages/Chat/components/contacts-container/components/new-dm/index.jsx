@@ -17,6 +17,12 @@ const NewDM = () => {
   const [searchedContacts, setSearchedContacts] = useState([]);
 
   const searchContacts = async (searchTerm) => {
+try{
+ 
+} catch(error){
+  console.log({error});
+}
+
     // Implement your search logic here
   };
 
