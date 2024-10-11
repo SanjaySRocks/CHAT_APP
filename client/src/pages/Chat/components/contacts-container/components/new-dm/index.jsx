@@ -1,5 +1,8 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
+ // Make sure the path is correct
+ import { HOST } from "@/utils/constants";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { FaPlus } from "react-icons/fa";
 import {
   Dialog,
@@ -8,23 +11,43 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import Input from "@/components/ui/input"; // Use default import
-import Lottie from "react-lottie"; // Ensure you have this installed
-import { animationDefaultOptions } from "@/lib/utils"; // Make sure to import this correctly
+import Input from "@/components/ui/input"; // Correct default import
 
+import { animationDefaultOptions , getColor } from "@/lib/utils"; // Ensure correct import
+import apiClient from "@/lib/api-client"; 
+import { SEARCH_CONTACTS_ROUTES } from "@/utils/constants"; // Correct search contacts route
+import { ScrollArea } from "@/components/ui/scroll-area";
+import Lottie from "react-lottie";
+import { useAppStore } from "@/store";
 const NewDM = () => {
+  const { setSelectedChatType , setSelectedChatData } = useAppStore();
   const [openNewContactModal, setOpenNewContactModal] = useState(false);
   const [searchedContacts, setSearchedContacts] = useState([]);
 
   const searchContacts = async (searchTerm) => {
-try{
- 
-} catch(error){
-  console.log({error});
-}
-
-    // Implement your search logic here
+    try {
+      if (searchTerm.length > 0) {
+        const response = await apiClient.post(
+          SEARCH_CONTACTS_ROUTES,
+          { searchTerm },
+          { withCredentials: true }
+        );
+        if (response.status === 200 && response.data.contacts) {
+          setSearchedContacts(response.data.contacts);
+        }
+      } else {
+        setSearchedContacts([]); // Clear search results if search term is empty
+      }
+    } catch (error) {
+      console.log({ error });
+    }
   };
+const selectNewContact = (contact)=>{
+setOpenNewContactModal(false);
+setSelectedChatType("contact");
+  setSelectedChatData(contact);
+setSearchedContacts([]);
+};
 
   return (
     <>
@@ -51,10 +74,53 @@ try{
             <Input
               placeholder="Search Contacts"
               className="rounded-lg p-6 bg-[#2c2e3b] border-none"
-              onChange={e => searchContacts(e.target.value)}
+              onChange={(e) => searchContacts(e.target.value)}
             />
           </div>
-          {searchedContacts.length <= 0 && ( // Check length of searchedContacts
+          <ScrollArea className="h-[250px]">
+            <div className="flex flex-col gap-5">
+              {searchedContacts.map((contact) => (
+                <div key={contact._id} className="flex gap-3 items-center cursor-pointer"
+                onClick={() =>selectNewContact(contact)}
+                >
+                  <div className="flex gap-3 items-center">
+                    <Avatar className="h-12 w-12 rounded-full overflow-hidden">
+                      {contact.image ? (
+                        <AvatarImage
+                          src={`${HOST}/${contact.image}`} // Use the uploaded image
+                          alt="profile"
+                          className="object-cover w-full h-full bg-black"
+                          onError={(e) => {
+                            e.target.onerror = null; 
+                            e.target.src = "/path/to/default-image.png"; // Path to default image
+                          }}
+                        />
+                      ) : (
+                        <div  
+                          className={`uppercase h-12 w-12 text-lg border flex items-center justify-center rounded-full ${getColor(contact.color)}`}
+                        >
+                          {contact.firstName
+                            ? contact.firstName.charAt(0)
+                            : contact.email.charAt(0)}
+                        </div>
+                      )}
+                    </Avatar>
+                  </div>
+                  <div className="flex flex-col">
+                    <span>
+                  {contact.firstName && contact.lastName 
+            ? `${contact.firstName} ${contact.lastName}` 
+            : contact.email}
+</span>
+<span className="text-xs">{contact.email}</span>
+                  </div>
+                  
+                
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+          {searchedContacts.length <= 0 && (
             <div className="flex-1 md:bg-[#1c1d25] md:flex mt-5 flex-col justify-center items-center duration-1000 transition-all">
               <Lottie
                 isClickToPauseDisabled={true}
@@ -64,9 +130,8 @@ try{
               />
               <div className="text-opacity-80 text-white flex flex-col gap-5 items-center mt-5 lg:text-2xl text-3xl transition-all duration-300 text-center">
                 <h3 className="poppins-medium">
-                  Hi<span className="text-purple-500">!</span>Search new{" "}
-                  <span className="text-purple-500">Contacts.</span> 
-
+                  Hi<span className="text-purple-500">!</span> Search new{" "}
+                  <span className="text-purple-500">Contacts.</span>
                 </h3>
               </div>
             </div>
