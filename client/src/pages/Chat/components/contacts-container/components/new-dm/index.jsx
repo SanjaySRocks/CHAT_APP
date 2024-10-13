@@ -1,7 +1,6 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
- // Make sure the path is correct
- import { HOST } from "@/utils/constants";
+import { HOST } from "@/utils/constants"; // Make sure HOST is correctly imported
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { FaPlus } from "react-icons/fa";
 import {
@@ -12,15 +11,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import Input from "@/components/ui/input"; // Correct default import
-
-import { animationDefaultOptions , getColor } from "@/lib/utils"; // Ensure correct import
-import apiClient from "@/lib/api-client"; 
+import { animationDefaultOptions, getColor } from "@/lib/utils"; // Ensure correct import
+import apiClient from "@/lib/api-client";
 import { SEARCH_CONTACTS_ROUTES } from "@/utils/constants"; // Correct search contacts route
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Lottie from "react-lottie";
 import { useAppStore } from "@/store";
+
 const NewDM = () => {
-  const { setSelectedChatType , setSelectedChatData } = useAppStore();
+  const { setSelectedChatType, setSelectedChatData } = useAppStore();
   const [openNewContactModal, setOpenNewContactModal] = useState(false);
   const [searchedContacts, setSearchedContacts] = useState([]);
 
@@ -42,12 +41,13 @@ const NewDM = () => {
       console.log({ error });
     }
   };
-const selectNewContact = (contact)=>{
-setOpenNewContactModal(false);
-setSelectedChatType("contact");
-  setSelectedChatData(contact); 
-setSearchedContacts([]);
-};
+
+  const selectNewContact = (contact) => {
+    setOpenNewContactModal(false);
+    setSelectedChatType("contact");
+    setSelectedChatData(contact);
+    setSearchedContacts([]);
+  };
 
   return (
     <>
@@ -77,51 +77,55 @@ setSearchedContacts([]);
               onChange={(e) => searchContacts(e.target.value)}
             />
           </div>
-          <ScrollArea className="h-[250px]">
-            <div className="flex flex-col gap-5">
-              {searchedContacts.map((contact) => (
-                <div key={contact._id} className="flex gap-3 items-center cursor-pointer"
-                onClick={() =>selectNewContact(contact)}
-                >
-                  <div className="flex gap-3 items-center">
-                    <Avatar className="h-12 w-12 rounded-full overflow-hidden">
-                      {contact.image ? (
-                        <AvatarImage
-                          src={`${HOST}/${contact.image}`} // Use the uploaded image
-                          alt="profile"
-                          className="object-cover w-full h-full bg-black"
-                          onError={(e) => {
-                            e.target.onerror = null; 
-                            e.target.src = "/path/to/default-image.png"; // Path to default image
-                          }}
-                        />
-                      ) : (
-                        <div  
-                          className={`uppercase h-12 w-12 text-lg border flex items-center justify-center rounded-full ${getColor(contact.color)}`}
-                        >
-                          {contact.firstName
-                            ? contact.firstName.charAt(0)
-                            : contact.email.charAt(0)}
-                        </div>
-                      )}
-                    </Avatar>
+
+          {searchedContacts.length > 0 ? (
+            <ScrollArea className="h-[250px]">
+              <div className="flex flex-col gap-5">
+                {searchedContacts.map((contact) => (
+                  <div
+                    key={contact._id}
+                    className="flex gap-3 items-center cursor-pointer"
+                    onClick={() => selectNewContact(contact)}
+                  >
+                    <div className="w-12 h-12 relative">
+                      <Avatar className="h-12 w-12 rounded-full overflow-hidden">
+                        {contact.image ? (
+                          <AvatarImage
+                            src={`${HOST}/${contact.image}`} // Use the uploaded image
+                            alt="profile"
+                            className="object-cover w-full h-full bg-black"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/path/to/default-image.png"; // Path to default image
+                            }}
+                          />
+                        ) : (
+                          <div
+                            className={`uppercase h-12 w-12 text-lg border flex items-center justify-center rounded-full ${getColor(
+                              contact.color
+                            )}`}
+                          >
+                            {contact.firstName
+                              ? contact.firstName.charAt(0)
+                              : contact.email.charAt(0)}
+                          </div>
+                        )}
+                      </Avatar>
+                    </div>
+                    <div className="flex flex-col">
+                      <span>
+                        {contact.firstName && contact.lastName
+                          ? `${contact.firstName} ${contact.lastName}`
+                          : contact.email}
+                      </span>
+                      <span className="text-xs">{contact.email}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <span>
-                  {contact.firstName && contact.lastName 
-            ? `${contact.firstName} ${contact.lastName}` 
-            : contact.email}
-</span>
-<span className="text-xs">{contact.email}</span>
-                  </div>
-                  
-                
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-          {searchedContacts.length <= 0 && (
-            <div className="flex-1 md:bg-[#1c1d25] md:flex mt-5 flex-col justify-center items-center duration-1000 transition-all">
+                ))}
+              </div>
+            </ScrollArea>
+          ) : (
+            <div className="flex-1 md:flex mt-5 md:mt-0 flex-col justify-center items-center duration-1000 transition-all">
               <Lottie
                 isClickToPauseDisabled={true}
                 height={100}

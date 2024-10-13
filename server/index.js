@@ -7,31 +7,51 @@ import authRoutes from "./routes/AuthRoutes.js";
 import { addProfileImage } from "./controllers/AuthController.js";
 import multer from "multer";
 import contactsRoutes from "./routes/ContactRoutes.js";
+import setupSocket from "./socket.js";
+import http from "http"; // Import the http module to create a server
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 8747; // Changed the port to 8748
+const port = process.env.PORT || 8747; 
 const databaseURL = process.env.DATABASE_URL;
 
-const upload = multer({dest:"uploads/profiles"})
-// CORS configuration for different server communication
+// Set up multer for handling profile image uploads
+const upload = multer({ dest: "uploads/profiles" });
+
+// Configure CORS to allow cross-origin requests
 app.use(cors({
-  origin: [process.env.ORIGIN], // From where requests are made, this will be the frontend URL
+  origin: [process.env.ORIGIN],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  credentials: true, // Enables cookies
+  credentials: true,
 }));
+
+// Serve static files from the uploads directory
 app.use("/uploads/profiles", express.static("uploads/profiles"));
-app.use("/api/auth/add-profile-image" , upload.single("profile-image"), addProfileImage);
-app.use(cookieParser()); // Getting cookie from frontend
-app.use(express.json()); // Parses incoming requests with JSON payloads
- // Route for authentication
-app.use("/api/auth", authRoutes); 
-app.use("/api/contacts" , contactsRoutes);
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`); // Logs server running message
+
+// Add profile image upload route
+app.use("/api/auth/add-profile-image", upload.single("profile-image"), addProfileImage);
+
+// Middleware for parsing cookies and JSON requests
+app.use(cookieParser());
+app.use(express.json());
+
+// Set up routes for authentication and contacts
+app.use("/api/auth", authRoutes);
+app.use("/api/contacts", contactsRoutes);
+
+// Create an HTTP server from the Express app
+const server = http.createServer(app);
+
+// Start the server
+server.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
 
+// Set up Socket.IO on the HTTP server
+setupSocket(server);
+
+// Connect to the MongoDB database
 mongoose.connect(databaseURL)
   .then(() => console.log("DB Connection Successful"))
   .catch(err => console.error("DB Connection Error:", err));
