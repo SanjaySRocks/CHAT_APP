@@ -93,7 +93,7 @@ const NewDM = () => {
                           <AvatarImage
                             src={`${HOST}/${contact.image}`} // Use the uploaded image
                             alt="profile"
-                            className="object-cover w-full h-full bg-black"
+                            className="object-cover w-full h-full bg-black rounded-full"
                             onError={(e) => {
                               e.target.onerror = null;
                               e.target.src = "/path/to/default-image.png"; // Path to default image

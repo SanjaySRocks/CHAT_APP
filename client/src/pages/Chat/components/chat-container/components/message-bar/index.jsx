@@ -1,11 +1,15 @@
+import { useSocket } from "@/context/SocketContext";
+import { useAppStore } from "@/store";
 import EmojiPicker from "emoji-picker-react";
 import { useState, useRef, useEffect } from "react";
 import { GrAttachment } from "react-icons/gr";
-import { IoSend } from "react-icons/io5"; 
+import { IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
 
 const MessageBar = () => {
+  const socket = useSocket();
   const emojiRef = useRef();
+  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
   const [message, setMessage] = useState("");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
 
@@ -27,10 +31,25 @@ const MessageBar = () => {
   };
 
   const handleSendMessage = async () => {
-    if (message.trim()) {
-      // Logic to send message
-      console.log("Message sent:", message);
-      setMessage(""); // Clear the input after sending
+    if (message.trim() === "") return; // Prevent sending empty messages
+
+    if (selectedChatType === "contact" && socket) {
+      socket.emit("sendMessage", {
+        sender: userInfo.id,
+        content: message,
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined, // Handle file attachments here if needed
+      });
+
+      setMessage(""); // Clear the message input after sending
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { // Send message on Enter key press
+      e.preventDefault(); // Prevents adding a new line in textarea
+      handleSendMessage();
     }
   };
 
@@ -42,7 +61,8 @@ const MessageBar = () => {
           className="flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none"
           placeholder="Enter Message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)} 
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown} // Handle Enter key for sending messages
         />
         <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white transition-all duration-300">
           <GrAttachment className="text-2xl" />
@@ -50,7 +70,8 @@ const MessageBar = () => {
         <div className="relative">
           <button
             className="text-neutral-500 focus:border-none focus:outline-none focus:text-white transition-all duration-300"
-            onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}>
+            onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
+          >
             <RiEmojiStickerLine className="text-2xl" />
           </button>
           {emojiPickerOpen && (
@@ -66,8 +87,9 @@ const MessageBar = () => {
       </div>
       <button
         className="bg-[#8417ff] rounded-md flex items-center justify-center p-5 focus:border-none hover:bg-[#741bda] focus:bg-[#741bda] focus:outline-none focus:text-white transition-all duration-300"
-        onClick={handleSendMessage}>
-        <IoSend className="text-2xl" /> 
+        onClick={handleSendMessage}
+      >
+        <IoSend className="text-2xl" />
       </button>
     </div>
   );

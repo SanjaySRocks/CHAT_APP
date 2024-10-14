@@ -1,5 +1,6 @@
+// In usermodel.js
 import mongoose from "mongoose";
-import { genSalt, hash } from "bcrypt"; // Import hash as well
+import { genSalt, hash } from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -36,11 +37,12 @@ const userSchema = new mongoose.Schema({
 // Pre-save hook to hash the password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next(); // Only hash if password has changed
-  const salt = await genSalt(10); // You can specify the number of salt rounds
+  const salt = await genSalt(10);
   this.password = await hash(this.password, salt);
   next();
 });
 
-const User = mongoose.model("User", userSchema); // Changed to singular 'User'
+// Prevent overwriting the User model if it already exists
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
