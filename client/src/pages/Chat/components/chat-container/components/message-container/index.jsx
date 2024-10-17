@@ -1,21 +1,23 @@
 import { useAppStore } from "@/store";
 import moment from "moment";
-import { useEffect, useRef, useLayoutEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const MessageContainer = () => {
   const scrollRef = useRef();
-  const { selectedChatType, selectedChatData, userInfo, selectedChatMessages } = useAppStore();
+  const { selectedChatType, selectedChatData, userInfo,selectedChatMessages } = useAppStore();
 
-  
+  // Check if messages are being populated correctly
   console.log("Messages:", selectedChatMessages);
   console.log("User Info:", userInfo);
   console.log("Selected Chat Data:", selectedChatData);
 
-  
-  useLayoutEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);  // Slight delay to ensure messages are rendered before scrolling
+    return () => clearTimeout(timer);
   }, [selectedChatMessages]);
 
   const renderMessages = () => {
@@ -25,7 +27,7 @@ const MessageContainer = () => {
 
     let lastDate = null;
     return selectedChatMessages.map((message, index) => {
-      const messageDate = message.timestamp ? moment(message.timestamp).format("YYYY-MM-DD") : null;
+      const messageDate = moment(message.timestamp).format("YYYY-MM-DD");
       const showDate = messageDate !== lastDate;
       lastDate = messageDate;
 
@@ -33,7 +35,7 @@ const MessageContainer = () => {
         <div key={index}>
           {showDate && (
             <div className="text-center text-gray-500 my-2">
-              {message.timestamp ? moment(message.timestamp).format("LL") : "Unknown date"}
+              {moment(message.timestamp).format("LL")}
             </div>
           )}
           {selectedChatType === "contact" && renderDMMessages(message)}
@@ -56,7 +58,7 @@ const MessageContainer = () => {
         </div>
       )}
       <div className="text-xs text-gray-500 mt-1">
-        {message.timestamp ? moment(message.timestamp).format("LT") : "Unknown time"}
+        {moment(message.timestamp).format("LT")}
       </div>
     </div>
   );
