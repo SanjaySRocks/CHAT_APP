@@ -18,7 +18,7 @@ const MessageContainer = () => {
       }
     }, 100);  // Slight delay to ensure messages are rendered before scrolling
     return () => clearTimeout(timer);
-  }, [selectedChatMessages]);
+  }, [selectedChatMessages]); 
 
   const renderMessages = () => {
     if (!selectedChatMessages || selectedChatMessages.length === 0) {
