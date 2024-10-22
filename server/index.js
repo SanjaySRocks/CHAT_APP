@@ -25,7 +25,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   credentials: true,
 }));
-
+ 
 // Serve static files from the uploads directory
 app.use("/uploads/profiles", express.static("uploads/profiles"));
 
