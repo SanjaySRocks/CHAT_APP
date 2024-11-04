@@ -8,7 +8,7 @@ import { useAppStore } from "./store";
 import { apiClient } from "./lib/api-client";
 import { GET_USER_INFO } from "./utils/constants"; 
 import { Toaster, toast } from "react-hot-toast"; // Import Toaster and toast
-
+ 
 
 // Protects routes that require authentication
 const PrivateRoute = ({ children }) => {
