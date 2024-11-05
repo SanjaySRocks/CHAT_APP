@@ -9,7 +9,7 @@ import multer from "multer";
 import contactsRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
 import http from "http"; // Import the http module to create a server
-
+ 
 dotenv.config();
 
 const app = express();
