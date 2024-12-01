@@ -9,7 +9,7 @@ import multer from "multer";
 import contactsRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
 import http from "http"; // Import the http module to create a server
-
+import messagesRoutes from "./routes/MessagesRoutes.js"; // Corrected path
 dotenv.config();
 
 const app = express();
@@ -36,9 +36,10 @@ app.use("/api/auth/add-profile-image", upload.single("profile-image"), addProfil
 app.use(cookieParser());
 app.use(express.json());
 
-// Set up routes for authentication and contacts
+// Set up routes for authentication, contacts, and messages
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
+app.use("/api/messages", messagesRoutes); // Corrected 'app.use'
 
 // Create an HTTP server from the Express app
 const server = http.createServer(app);

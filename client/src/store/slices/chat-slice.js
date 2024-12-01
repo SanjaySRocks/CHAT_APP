@@ -2,7 +2,7 @@ export const creatChatSlice = (set, get) => ({
   selectedChatType: undefined,  // Initial state for chat type
   selectedChatData: undefined,  // Initial state for chat data
   selectedChatMessages: [],     // Initial state for chat messages
-
+directMessageContacts:[],
   // Function to set the selected chat type
   setSelectedChatType: (selectedChatType) => set({ selectedChatType }),
 
@@ -12,6 +12,7 @@ export const creatChatSlice = (set, get) => ({
   // Function to set selected chat messages
   setSelectedChatMessages: (selectedChatMessages) => set({ selectedChatMessages }),
 
+  setDirectMessagesContacts:(directMessageContacts)=>set({ directMessageContacts }),
   // Function to close chat and reset the state
   closeChat: () => set({
     selectedChatData: undefined,
@@ -24,16 +25,7 @@ export const creatChatSlice = (set, get) => ({
     const selectedChatMessages = get().selectedChatMessages;
     const selectedChatType = get().selectedChatType;
 
-    // Ensure chat type is defined before adding message
-    if (!selectedChatType) {
-      console.warn("No chat type selected. Cannot add message.");
-      return;
-    }
-
-    // Log the message before processing
-    console.log("Message before processing:", message);
-
-    // Update selectedChatMessages by adding the new message
+   
     set({
       selectedChatMessages: [
         ...selectedChatMessages,
