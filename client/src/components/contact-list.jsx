@@ -8,13 +8,13 @@ const ContactList = ({ contacts, isChannel = false }) => {
     setSelectedChatData,
     setSelectedChatType,
     selectedChatMessages,
-    setSelectedChatMessages, // Ensure this is included in the store
+    setSelectedChatMessages,
   } = useAppStore();
 
   const handleClick = (contact) => {
     // Set chat type and data
     if (isChannel) setSelectedChatType("channel");
-    else setSelectedChatType("contact"); // Fixed function call
+    else setSelectedChatType("contact");
 
     // Update selected chat data
     if (!selectedChatData || selectedChatData._id !== contact._id) {
@@ -50,7 +50,6 @@ const ContactList = ({ contacts, isChannel = false }) => {
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full w-full bg-gray-300">
-                    {/* Fallback Initials */}
                     <span className="text-lg font-medium text-black">
                       {contact.firstName?.[0]?.toUpperCase() || "?"}
                     </span>
@@ -58,12 +57,16 @@ const ContactList = ({ contacts, isChannel = false }) => {
                 )}
               </Avatar>
             )}
-{isChannel && <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">#</div>}
-{{}}
-            {/* Contact Name */}
-            <span className="text-sm font-medium">
-              {contact.firstName} {contact.lastName || ""}
-            </span>
+            {isChannel && (
+              <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
+                #
+              </div>
+            )}
+            {isChannel ? (
+              <span>{contact.name}</span>
+            ) : (
+              <span>{`${contact.firstName} ${contact.lastName}`}</span>
+            )}
           </div>
         </div>
       ))}

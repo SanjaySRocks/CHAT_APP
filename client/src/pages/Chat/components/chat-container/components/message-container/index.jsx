@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 
 const MessageContainer = () => {
   const scrollRef = useRef();
-  const { selectedChatType, selectedChatData, userInfo, selectedChatMessages, setselectedChatMessages } = useAppStore();
+  const { selectedChatType, selectedChatData, userInfo, selectedChatMessages, setSelectedChatMessages } = useAppStore();
 
   useEffect(() => {
     const getMessages = async () => {
@@ -17,7 +17,7 @@ const MessageContainer = () => {
           { withCredentials: true }
         );
         if (response.data.messages) {
-          setselectedChatMessages(response.data.messages);
+          setSelectedChatMessages(response.data.messages);
         }
       } catch (error) {
         console.log({ error });
@@ -27,7 +27,7 @@ const MessageContainer = () => {
     if (selectedChatData._id) {
       if (selectedChatType === "contact") getMessages();
     }
-  }, [selectedChatData, selectedChatType, setselectedChatMessages]);
+  }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
 
   useEffect(() => {
     if (scrollRef.current) {

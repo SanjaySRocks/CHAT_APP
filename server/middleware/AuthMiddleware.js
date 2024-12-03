@@ -17,7 +17,7 @@ console.log(`3`);
     }
 console.log(`4`);
     request.user = decoded; // Attach the decoded user object to the request
-    console.log(`5`);
+    console.log(decoded);
     next();
   });
 };
