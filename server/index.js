@@ -31,7 +31,7 @@ app.use("/uploads/profiles", express.static("uploads/profiles"));
 
 // Add profile image upload route
 app.use("/api/auth/add-profile-image", upload.single("profile-image"), addProfileImage);
-app.use("uploads/files" , express.static("uploads/files"));
+app.use("/uploads/files" , express.static("uploads/files"));
 // Middleware for parsing cookies and JSON requests
 app.use(cookieParser());
 app.use(express.json());
