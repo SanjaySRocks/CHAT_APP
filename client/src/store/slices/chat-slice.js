@@ -7,6 +7,8 @@ isUploading:false,
 isDownloading:false,
 fileUploadProgress:0,
 fileDownloadProgress:0,
+channels:[],
+setChannels:(channels)=>set({channels}),
 setIsUploading: (isUploading) => set({ isUploading }),
 setIsDownloading: (isDownloading) => set({ isDownloading }),
 setFileUploadProgress: (fileUploadProgress) => set({ fileUploadProgress }),
@@ -22,6 +24,15 @@ setFileDownloadProgress: (fileDownloadProgress) =>
   setSelectedChatMessages: (selectedChatMessages) => set({ selectedChatMessages }),
 
   setDirectMessagesContacts:(directMessageContacts)=>set({ directMessageContacts }),
+
+addChannel:(channel)=>{
+  const channels = get().channels;
+  set({ channels: [channel, ...channels] });
+},
+  addChannel:(channel)=>{
+    const channels = get().channels;
+    set({channels:[channel,...channels]});
+  },
   // Function to close chat and reset the state
   closeChat: () => set({
     selectedChatData: undefined,

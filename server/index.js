@@ -10,6 +10,7 @@ import contactsRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
 import http from "http"; // Import the http module to create a server
 import messagesRoutes from "./routes/MessagesRoutes.js"; // Corrected path
+import channelRoutes from "./routes/ChannelRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -40,6 +41,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
 app.use("/api/messages", messagesRoutes); // Corrected 'app.use'
+app.use('/api/channel' , channelRoutes);
 
 // Create an HTTP server from the Express app
 const server = http.createServer(app);
