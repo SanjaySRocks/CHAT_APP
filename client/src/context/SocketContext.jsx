@@ -43,9 +43,15 @@ export const SocketProvider = ({ children }) => {
           addMessage(message); // Update the app state with the received message
         }
       };
-
-      socket.current.on("receiveMessage", handleReceiveMessage); // Listen for messages
-
+ const  handleReceiveChannelMessage = (message) => {
+  const { selectedChatData, selectedChatType, addMessage} =
+  useAppStore.getState();
+  if(selectedChatType !==undefined && selectedChatData._id===message.channelId){
+    addMessage(message);
+  }
+ };
+      socket.current.on("recieveMessage", handleReceiveMessage); // Listen for messages
+socket.current.on("recieve-channel-message", handleReceiveChannelMessage);
       // Cleanup on unmount
       return () => {
         if (socket.current) {

@@ -41,7 +41,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
 app.use("/api/messages", messagesRoutes); // Corrected 'app.use'
-app.use('/api/channel' , channelRoutes);
+app.use("/api/channel" , channelRoutes);
 
 // Create an HTTP server from the Express app
 const server = http.createServer(app);

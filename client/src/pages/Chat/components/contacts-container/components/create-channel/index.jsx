@@ -30,9 +30,11 @@ const CreateChannel = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        console.log("Fetching all contacts...");
         const response = await apiClient.get(GET_ALL_CONTACTS_ROUTES, {
           withCredentials: true,
         });
+        console.log("Contacts fetched successfully:", response.data.contacts);
         setAllContacts(response.data.contacts);
       } catch (error) {
         console.error("Error fetching contacts:", error);
@@ -42,28 +44,32 @@ const CreateChannel = () => {
   }, []);
 
   const createChannel = async () => {
-   try{
-    if(channelName.length>0 && selectedContacts.length>0){
+    try {
+      if (channelName.length > 0 && selectedContacts.length > 0) {
+        
 
-    
-    const response = await apiClient.post(CREATE_CHANNEL_ROUTE,{
-    name: channelName,
-    members : selectedContacts.map((contact)=>contact.value),
-    },
-  {withCredentials: true}
-  );
-  if(response.status==201){
-    setChannelName("");
-    setSelectedContacts([]);
-    setNewChannelModal(false);
-    addChannel(response.data.channel); 
-    
-  }
-  }
-   }catch(error){
-console.log({error});
-   }
-    
+        const response = await apiClient.post(
+          CREATE_CHANNEL_ROUTE,
+          {
+            name: channelName,
+            members: selectedContacts.map((contact) => contact.label),
+          },
+          { withCredentials: true }
+        );
+        console.log("Channel created successfully:", response.data);
+
+        if (response.status === 201) {
+          setChannelName("");
+          setSelectedContacts([]);
+          setNewChannelModal(false);
+          addChannel(response.data.channel);
+        }
+      } else {
+        console.warn("Channel name or selected contacts are missing.");
+      }
+    } catch (error) {
+      console.error("Error creating channel:", error);
+    }
   };
 
   return (
@@ -73,7 +79,10 @@ console.log({error});
           <TooltipTrigger>
             <FaPlus
               className="text-neutral-400 font-light text-opacity-90 text-start hover:text-neutral-100 cursor-pointer transition-all duration-300"
-              onClick={() => setNewChannelModal(true)}
+              onClick={() => {
+                console.log("Opening new channel modal");
+                setNewChannelModal(true);
+              }}
             />
           </TooltipTrigger>
           <TooltipContent className="bg-[#1c1b1e] border-none mb-2 p-3 text-white">
@@ -91,7 +100,10 @@ console.log({error});
             <Input
               placeholder="Channel Name"
               className="rounded-lg p-6 bg-[#2c2e3b] border-none"
-              onChange={(e) => setChannelName(e.target.value)}
+              onChange={(e) => {
+                console.log("Channel name input changed:", e.target.value);
+                setChannelName(e.target.value);
+              }}
               value={channelName}
             />
           </div>
@@ -101,7 +113,10 @@ console.log({error});
               defaultOptions={allContacts}
               placeholder="Search Contacts"
               value={selectedContacts}
-              onChange={setSelectedContacts}
+              onChange={(newSelectedContacts) => {
+                console.log("Selected contacts updated:", newSelectedContacts);
+                setSelectedContacts(newSelectedContacts);
+              }}
               emptyIndicator={
                 <p className="text-center text-lg leading-10 text-gray-600">No results found</p>
               }

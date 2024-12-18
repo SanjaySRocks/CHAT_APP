@@ -1,48 +1,66 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
-import { useAppStore } from "@/store"; // Make sure this import is correct
+import { useAppStore } from "@/store";
 import { HOST } from "@/utils/constants";
 import { RiCloseFill } from "react-icons/ri";
 
 const ChatHeader = () => {
-  // Ensure that you are destructuring both selectedChatType and setSelectedChatType from the store
-  const { closeChat, selectedChatData, selectedChatType, setSelectedChatType } = useAppStore();
+  const { closeChat, selectedChatData, selectedChatType } = useAppStore();
 
-  // Ensure selectedChatData is valid before using it
-  const hasSelectedChatData = selectedChatData && selectedChatData.image && selectedChatData.firstName && selectedChatData.lastName;
+  // Helper to render the avatar
+  const renderAvatar = () => {
+    if (selectedChatType === "contact") {
+      // Check if image, firstName, and lastName exist
+      const hasValidImage = selectedChatData?.image;
+      const hasValidName = selectedChatData?.firstName && selectedChatData?.lastName;
+
+      return hasValidImage ? (
+        <AvatarImage
+          src={`${HOST}/${selectedChatData.image}`} // Load user's uploaded image
+          alt={`${selectedChatData.firstName} ${selectedChatData.lastName}`}
+          className="object-cover w-full h-full bg-black"
+          onError={(e) => {
+            e.target.onerror = null; // Prevent infinite error loop
+            e.target.src = "/path/to/default-image.png"; // Replace with default image path
+          }}
+        />
+      ) : hasValidName ? (
+        <div
+          className={`uppercase h-12 w-12 text-lg border flex items-center justify-center rounded-full ${getColor(
+            selectedChatData.color || "defaultColor"
+          )}`}
+        >
+          {selectedChatData.firstName.charAt(0)}
+        </div>
+      ) : (
+        <div
+          className="uppercase h-12 w-12 text-lg border flex items-center justify-center rounded-full bg-gray-400"
+        >
+          {selectedChatData?.email?.charAt(0) || "?"}
+        </div>
+      );
+    }
+
+    // Placeholder avatar for non-contact chat types (e.g., channels)
+    return (
+      <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
+        #
+      </div>
+    );
+  };
 
   return (
     <div className="h-[10vh] border-b-2 border-[#2f303b] flex items-center justify-between px-20">
       <div className="flex gap-5 items-center w-full justify-between">
         <div className="flex gap-3 items-center justify-center">
           <div className="w-12 h-12 relative">
-            {hasSelectedChatData ? (
-              <Avatar className="h-12 w-12 rounded-full overflow-hidden">
-                <AvatarImage
-                  src={`${HOST}/${selectedChatData.image}`} // Use the uploaded image
-                  alt="profile"
-                  className="object-cover w-full h-full bg-black"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "/path/to/default-image.png"; // Path to default image
-                  }}
-                />
-              </Avatar>
-            ) : (
-              <div
-                className={`uppercase h-12 w-12 text-lg border flex items-center justify-center rounded-full ${getColor(
-                  selectedChatData?.color || 'defaultColor' // Default color if undefined
-                )}`}
-              >
-                {selectedChatData?.firstName
-                  ? selectedChatData.firstName.charAt(0)
-                  : selectedChatData?.email?.charAt(0) || "?"} {/* Fallback to '?' */}
-              </div>
-            )}
+            <Avatar className="h-12 w-12 rounded-full overflow-hidden">
+              {renderAvatar()}
+            </Avatar>
           </div>
 
           <div>
-            {/* Ensure safe checking of selectedChatType and selectedChatData */}
+            {selectedChatType === "channel" && selectedChatData?.name}
             {selectedChatType === "contact" && selectedChatData ? (
               `${selectedChatData.firstName} ${selectedChatData.lastName}`
             ) : (

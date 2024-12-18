@@ -45,8 +45,18 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined, // Handle file attachments here if needed
       });
-      setMessage(""); // Clear the message input after sending
+      
+    }else if (selectedChatType === "channel"){
+      socket.emit("send-channel-mesaage",{
+        sender: userInfo.id,
+        content: message,
+        
+        messageType: "text",
+        fileUrl: undefined,
+        channelId: selectedChatData._id,
+      });
     }
+    setMessage("");
   };
 
   const handleKeyDown = (e) => {
@@ -84,6 +94,15 @@ if(response.status===200 && response.data){
     recipient: selectedChatData._id,
     messageType: "file",
     fileUrl: response.data.filePath, // Handle file attachments here if needed
+  });
+}else if(selectedChatType==="channel"){
+  socket.emit("send-channel-mesaage",{
+    sender: userInfo.id,
+    content: message,
+    
+    messageType: "file",
+    fileUrl: response.data.filePath,
+    channelId: selectedChatData._id,
   });
 }
 }

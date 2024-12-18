@@ -5,7 +5,10 @@ import User from "../models/UserModel.js";
 export const createChannel = async (request, response, next) => {
   try {
     const { name, members } = request.body;
-    const userId = request.userId;
+    const userId = request.user.userId;
+
+    console.log("Incoming Request Data:", { name, members });
+    console.log("User ID from Token:", userId);   
 
     // Check if the admin user exists
     const admin = await User.findById(userId);
@@ -28,8 +31,6 @@ export const createChannel = async (request, response, next) => {
 
     // Save the new channel
     await newChannel.save();
-
-    // Return the created channel
     return response.status(201).json({ channel: newChannel });
 
   } catch (error) {
@@ -50,6 +51,9 @@ export const getUserChannels = async (request, response, next) => {
 
   } catch (error) {
     console.log({ error });
+
+
+
     return response.status(500).send("Internal server error");
   }
 };
