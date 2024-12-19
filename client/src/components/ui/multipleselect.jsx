@@ -267,10 +267,10 @@ const MultipleSelector = React.forwardRef(
           }}
         >
           <div className="flex flex-wrap gap-3">
-            {selected.map((option) => {
+            {selected.map((option, index) => {
               return (
                 <Badge
-                  key={option.value}
+                  key={index}
                   className={cn(
                     "data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground bg-purple-500 p-2",
                     "data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground",
@@ -345,7 +345,7 @@ const MultipleSelector = React.forwardRef(
                   disabled ||
                   selected.length < 1 ||
                   selected.filter((s) => s.fixed).length === selected.length) &&
-                  "hidden"
+                "hidden"
               )}
             >
               <X />
@@ -375,17 +375,17 @@ const MultipleSelector = React.forwardRef(
                   {!selectFirstItem && (
                     <CommandItem value="-" className="hidden" />
                   )}
-                  {Object.entries(selectables).map(([key, dropdowns]) => (
+                  {Object.entries(selectables).map(([key, dropdowns], index) => (
                     <CommandGroup
-                      key={key}
+                      key={index}
                       heading={key}
                       className="h-full overflow-auto"
                     >
                       <>
-                        {dropdowns.map((option) => {
+                        {dropdowns.map((option, index) => {
                           return (
                             <CommandItem
-                              key={option.value}
+                              key={index}
                               value={option.value}
                               disabled={option.disable}
                               onMouseDown={(e) => {
@@ -405,7 +405,7 @@ const MultipleSelector = React.forwardRef(
                               className={cn(
                                 "cursor-pointer",
                                 option.disable &&
-                                  "cursor-default text-muted-foreground"
+                                "cursor-default text-muted-foreground"
                               )}
                             >
                               {option.label}

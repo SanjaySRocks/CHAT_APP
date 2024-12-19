@@ -98,7 +98,7 @@ if(response.status===200 && response.data){
 }else if(selectedChatType==="channel"){
   socket.emit("send-channel-mesaage",{
     sender: userInfo.id,
-    content: message,
+    content: undefined,
     
     messageType: "file",
     fileUrl: response.data.filePath,

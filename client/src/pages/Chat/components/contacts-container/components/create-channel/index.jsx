@@ -46,13 +46,13 @@ const CreateChannel = () => {
   const createChannel = async () => {
     try {
       if (channelName.length > 0 && selectedContacts.length > 0) {
-        
 
+        console.log("Selected Contacts", selectedContacts);
         const response = await apiClient.post(
           CREATE_CHANNEL_ROUTE,
           {
             name: channelName,
-            members: selectedContacts.map((contact) => contact.label),
+            members: selectedContacts.map((contact) => { return contact.id }),
           },
           { withCredentials: true }
         );

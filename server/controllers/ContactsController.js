@@ -34,7 +34,7 @@ export const searchContacts = async (request, response, next) => {
 
 export const getContactsForDMList = async (request, response, next) => {
   try {
-    let { userId } = request;   
+    let { userId } = request;
     userId = new mongoose.Types.ObjectId(userId);  // Ensure userId is a valid ObjectId
 
     const contacts = await Message.aggregate([
@@ -81,8 +81,8 @@ export const getContactsForDMList = async (request, response, next) => {
         },
       },
       {
-      $sort: { lastMessageTime: -1 },
-    },
+        $sort: { lastMessageTime: -1 },
+      },
     ]);
 
     return response.status(200).json({ contacts });
@@ -96,13 +96,13 @@ export const getContactsForDMList = async (request, response, next) => {
 export const getAllContacts = async (request, response, next) => {
   try {
     const users = await User.find(
-      { _id: { $ne: request.userId} },
+      { _id: { $ne: request.userId } },
       "firstName lastName _id email"
     );
-const contacts = users.map((user) => ({
-  label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
-  
-}));
+    const contacts = users.map((user) => ({
+      label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+      id: user._id,
+    }));
 
     return response.status(200).json({ contacts });
   } catch (error) {

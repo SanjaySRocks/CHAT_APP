@@ -64,7 +64,7 @@ const ChatHeader = () => {
             {selectedChatType === "contact" && selectedChatData ? (
               `${selectedChatData.firstName} ${selectedChatData.lastName}`
             ) : (
-              <span>No contact selected</span> // Fallback message
+              <span></span> 
             )}
           </div>
         </div>
