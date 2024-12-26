@@ -48,7 +48,7 @@ const createdMessage = await Message.create({
   timestamp: new Date(),
   fileUrl,
 });
-const messageData = await Message.finById(createdMessage._id).populate("sender","id email firstName lastName image color")
+const messageData = await Message.findById(createdMessage._id).populate("sender","id email firstName lastName image color")
 .exec();
 
 await Channel.findByIdAndUpdate(channelId,{

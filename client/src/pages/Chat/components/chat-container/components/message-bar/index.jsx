@@ -47,7 +47,7 @@ const MessageBar = () => {
       });
       
     }else if (selectedChatType === "channel"){
-      socket.emit("send-channel-mesaage",{
+      socket.emit("send-channel-message",{
         sender: userInfo.id,
         content: message,
         

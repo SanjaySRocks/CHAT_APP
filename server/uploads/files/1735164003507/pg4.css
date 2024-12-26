@@ -1,0 +1,119 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f4f8;
+}
+
+.review-form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 900px;
+    margin: 20px;
+    box-sizing: border-box;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+td {
+    background-color: #fafafa;
+}
+
+.checkbox-label {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #f0f4f8;
+    border-radius: 6px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.checkbox-label:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked + .checkbox-label {
+    background-color: #007bff;
+    color: white;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+button:active {
+    background-color: #1e7e34;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
