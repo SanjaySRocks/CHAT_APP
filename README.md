@@ -9,6 +9,7 @@ The app starts with two simple options—Login or Signup. New users can sign up,
 
 ### 𝐏𝐫𝐨𝐟𝐢𝐥𝐞 𝐏𝐚𝐠𝐞:
 After login or signup, users are redirected to their profile page, where they can:
+
 Enter their first name and last name.
 Update or edit their profile details anytime.
 Once changes are saved, the user is redirected to the main page.
@@ -17,6 +18,7 @@ Once changes are saved, the user is redirected to the main page.
 
 ### 𝐌𝐚𝐢𝐧 𝐏𝐚𝐠𝐞 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬:
 The main page offers two options:
+
 1️⃣ Direct Messaging:
 Users can select a contact and start messaging.
 They can send emojis, files, and photos for a more interactive chat experience.
