@@ -14,7 +14,7 @@ After login or signup, users are redirected to their profile page, where they ca
 Enter their first name and last name.
 Update or edit their profile details anytime.
 Once changes are saved, the user is redirected to the main page.
-![Profile_Page](https://github.com/AyushiChopra02/CHAT_APP/blob/main/Images/profilepg.png)
+![Profile_Page](https://github.com/AyushiChopra02/CHAT_APP/blob/main/Images/profile.png?raw=trueg)
 
 -------
 
