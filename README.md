@@ -4,6 +4,7 @@
 
  ### 𝐔𝐬𝐞𝐫 𝐀𝐮𝐭𝐡𝐞𝐧𝐭𝐢𝐜𝐚𝐭𝐢𝐨𝐧: 
 The app starts with two simple options—Login or Signup. New users can sign up, while existing users can log in with their credentials.
+![Login Page](https://github.com/AyushiChopra02/CHAT_APP/blob/main/Images/firstpg.png)
 
 -------
 
@@ -13,6 +14,7 @@ After login or signup, users are redirected to their profile page, where they ca
 Enter their first name and last name.
 Update or edit their profile details anytime.
 Once changes are saved, the user is redirected to the main page.
+![Profile_Page](https://github.com/AyushiChopra02/CHAT_APP/blob/main/Images/profilepg.png)
 
 -------
 
@@ -26,6 +28,7 @@ They can send emojis, files, and photos for a more interactive chat experience.
 2️⃣ Channels:
 Users can create channels for group conversations.
 Channels allow multiple users to collaborate and communicate in real-time.
+![Main_Page](https://github.com/AyushiChopra02/CHAT_APP/blob/main/Images/mainPage.png)
 
 -------
 
