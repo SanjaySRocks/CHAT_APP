@@ -4,8 +4,10 @@
 
  ### 𝐔𝐬𝐞𝐫 𝐀𝐮𝐭𝐡𝐞𝐧𝐭𝐢𝐜𝐚𝐭𝐢𝐨𝐧:
 The app starts with two simple options—Login or Signup. New users can sign up, while existing users can log in with their credentials.
+-------
 
-𝐏𝐫𝐨𝐟𝐢𝐥𝐞 𝐏𝐚𝐠𝐞: After login or signup, users are redirected to their profile page, where they can:
+𝐏𝐫𝐨𝐟𝐢𝐥𝐞 𝐏𝐚𝐠𝐞:
+After login or signup, users are redirected to their profile page, where they can:
 
 Enter their first name and last name.
 Update or edit their profile details anytime.
