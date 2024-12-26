@@ -1,8 +1,8 @@
 # CHAT_APP
 
-𝐂𝐡𝐚𝐭 𝐀𝐩𝐩 :
 
- ## 𝐔𝐬𝐞𝐫 𝐀𝐮𝐭𝐡𝐞𝐧𝐭𝐢𝐜𝐚𝐭𝐢𝐨𝐧:
+
+ ### 𝐔𝐬𝐞𝐫 𝐀𝐮𝐭𝐡𝐞𝐧𝐭𝐢𝐜𝐚𝐭𝐢𝐨𝐧:
 The app starts with two simple options—Login or Signup. New users can sign up, while existing users can log in with their credentials.
 
 𝐏𝐫𝐨𝐟𝐢𝐥𝐞 𝐏𝐚𝐠𝐞: 
